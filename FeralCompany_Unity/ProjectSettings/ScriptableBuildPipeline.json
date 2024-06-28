@@ -1,0 +1,13 @@
+{
+  "cacheServerHost": "",
+  "cacheServerPort": 8126,
+  "fileIDHashSeed": 0,
+  "logCacheMiss": false,
+  "maximumCacheSize": 20,
+  "prefabPackedHeaderSize": 2,
+  "slimWriteResults": true,
+  "threadedArchiving": true,
+  "useBuildCacheServer": false,
+  "useDetailedBuildLog": false,
+  "useV2Hasher": true
+}

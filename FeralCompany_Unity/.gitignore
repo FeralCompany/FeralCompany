@@ -1,0 +1,27 @@
+# Exclude everything
+/*
+
+## Include important Git files
+!.gitignore
+
+# Granularly include Assets
+!Assets/
+Assets/*
+!Assets/Editor/
+!Assets/Editor.meta
+!Assets/Fonts/
+!Assets/Fonts.meta
+!Assets/Prefabs/
+!Assets/Prefabs.meta
+!Assets/Scenes/
+!Assets/Scenes.meta
+!Assets/Scripts/
+!Assets/Scripts.meta
+!Assets/Sprites/
+!Assets/Sprites.meta
+
+# Include Project Settings
+!ProjectSettings/
+
+# Include Packages
+!Packages/

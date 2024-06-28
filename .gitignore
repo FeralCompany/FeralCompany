@@ -1,0 +1,48 @@
+# Exclude everything
+/*
+
+## Include Build System/Scripts
+!NuGet.Config
+!Directory.Build.props
+!build.sh
+!build.ps1
+!build.cmd
+
+## Include Markdowns
+!*.md
+!LICENSE
+
+## Include important Git files
+!.gitmodules
+!.gitignore
+!.gitattributes
+!.git-blame-ignore-revs
+
+## Include GitHub specific
+!.github/
+
+## Include Assets
+!assets/
+
+## Include Thunderstore metadata
+!thunderstore.toml
+
+## Include Solution
+!FeralCompany.sln
+
+## FeralCommon Project
+!FeralCompany/
+FeralCompany/[Bb]in/
+FeralCompany/[Oo]bj/
+
+## .config
+!.config/
+
+# Include Explicit exceptions/ignores
+**.user
+
+# Include pre-commit config
+!.pre-commit-config.yaml
+
+# Include Unity files (Child .gitignore used)
+!FeralCompany_Unity

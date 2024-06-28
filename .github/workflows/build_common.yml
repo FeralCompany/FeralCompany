@@ -1,0 +1,51 @@
+name: Reusable Build Script
+on:
+  workflow_call:
+    secrets:
+      UNITY_LICENSE:
+        required: true
+      UNITY_EMAIL:
+        required: true
+      UNITY_PASSWORD:
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch Sources
+      uses: actions/checkout@v4
+      with:
+        lfs: true
+    - name: Setup .NET Environment
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Fetch Cache
+      uses: actions/cache@v4
+      with:
+        path: FeralCompany_Unity/Library
+        key: Library-FeralCompany_Unity-StandaloneWindows
+        restore-keys: |
+          Library-FeralCompany_Unity-
+          Library-
+    - name: Setup Unity
+      uses: game-ci/unity-builder@v4
+      env:
+        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+        UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      with:
+        projectPath: FeralCompany_Unity
+        buildMethod: FeralCompany_Unity.Editor.CompileAssetBundles.Execute_CompileAssetBundles
+        targetPlatform: StandaloneWindows
+    - name: Restore Solution
+      run: |
+        dotnet restore
+        dotnet tool restore
+    - name: Build Solution
+      run: dotnet build -c Release
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: ./dist/*.zip

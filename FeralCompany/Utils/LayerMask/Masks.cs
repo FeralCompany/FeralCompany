@@ -1,0 +1,37 @@
+namespace FeralCompany.Utils.LayerMask;
+
+public enum Masks
+{
+    Default = 1 << 0,
+    TransparentFX = 1 << 1,
+    IgnoreRaycast = 1 << 2,
+    Player = 1 << 3,
+    Water = 1 << 4,
+    UI = 1 << 5,
+    Props = 1 << 6,
+    HelmetVisor = 1 << 7,
+    Room = 1 << 8,
+    InteractableObject = 1 << 9,
+    Foliage = 1 << 10,
+    Colliders = 1 << 11,
+    PhysicsObject = 1 << 12,
+    Triggers = 1 << 13,
+    MapRadar = 1 << 14,
+    NavigationSurface = 1 << 15,
+    RoomLight = 1 << 16,
+    Anomaly = 1 << 17,
+    LineOfSight = 1 << 18,
+    Enemies = 1 << 19,
+    PlayerRagdoll = 1 << 20,
+    MapHazards = 1 << 21,
+    ScanNode = 1 << 22,
+    EnemiesNotRendered = 1 << 23,
+    MiscLevelGeometry = 1 << 24,
+    Terrain = 1 << 25,
+    PlaceableShipObjects = 1 << 26,
+    PlacementBlocker = 1 << 27,
+    Railing = 1 << 28,
+    DecalStickableSurface = 1 << 29,
+    Unused1 = 1 << 30,
+    Unused2 = 1 << 31
+}

@@ -1,0 +1,82 @@
+name: Release Tagged Build
+on:
+  push:
+    tags: ['*']
+permissions:
+  contents: write
+  packages: write
+jobs:
+  build:
+    uses: ./.github/workflows/build_common.yml
+    secrets:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+  create-release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ github.ref_name }}
+    steps:
+    - name: Fetch Sources
+      uses: actions/checkout@v4
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+    - name: Clean Existing Release
+      run: gh release delete --yes "${RELEASE_VERSION}"
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Release Current Tag
+      run: |
+        LATEST_VERSION=$(grep -oP '(?<=Version ).*(?=)' CHANGELOG.md | head -n 1)
+        START_LINE=$(grep -n "## Version $LATEST_VERSION" CHANGELOG.md | cut -d ":" -f 1)
+        NEXT_RELEASE_LINE=$(grep -n "## Version " CHANGELOG.md | grep -A 1 "$LATEST_VERSION" | tail -n 1 | cut -d ":" -f 1)
+
+        export "CHANGELOG_FILE=$(mktemp --suffix=.md)"
+        echo "CHANGELOG_FILE=${CHANGELOG_FILE}" >> $GITHUB_ENV
+
+        if [ -z "$NEXT_RELEASE_LINE" ]; then
+          end_line=$(wc -l < CHANGELOG.md)
+        else
+          end_line=$((NEXT_RELEASE_LINE - 1))
+        fi
+
+        sed -n "${START_LINE},${end_line}p" CHANGELOG.md > "${CHANGELOG_FILE}"
+
+        echo "" >> "${CHANGELOG_FILE}"
+
+        gh api --method POST -H "Accept: application/vnd.github+json" \
+          "/repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+          -f tag_name="${RELEASE_VERSION}" \
+          --jq ".body" >> "${CHANGELOG_FILE}"
+
+        cat "${CHANGELOG_FILE}"
+
+        gh release create "${RELEASE_VERSION}" -F "${CHANGELOG_FILE}" -t "${RELEASE_VERSION}" build-artifacts/*.zip
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  deploy-to-thunderstore:
+#    name: Deploy to Thunderstore
+#    needs: build-release-artifacts
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Fetch Sources
+#      uses: actions/checkout@v4
+#    - name: Download Artifacts
+#      uses: actions/download-artifact@v4
+#      with:
+#        name: thunderstore-build
+#    - name: Setup .NET Environment
+#      uses: actions/setup-dotnet@v4
+#      with:
+#        dotnet-version: 8.0.x
+#    - name: Restore Project Tools
+#      run: dotnet tool restore
+#    - name: Deploy to Thunderstore
+#      env:
+#        TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_TOKEN }}
+#      run: |
+#        dotnet build FeralCompany/FeralCompany.csproj -target:PublishThunderstoreArtifact
