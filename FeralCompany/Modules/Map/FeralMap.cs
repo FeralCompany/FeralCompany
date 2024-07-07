@@ -106,7 +106,6 @@ public sealed class FeralMap : MonoBehaviour
     private const float NorthAtan2 = 1.570796f;
     private void Update()
     {
-
         ValidateTarget();
         foreach (var pointer in Feral.CurrentRound.Pointers)
             pointer.UpdateFor(Target);

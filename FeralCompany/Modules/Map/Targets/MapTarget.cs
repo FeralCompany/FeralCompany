@@ -35,17 +35,12 @@ public abstract class MapTarget : IComparable<MapTarget>
 
     internal abstract bool ValidateTarget();
 
+    private static int _incrementer;
+    private readonly int _targetId = _incrementer++;
+
     public int CompareTo(MapTarget? other)
     {
-        if (other is null)
-            return -1;
-
-        if (this is PlayerTarget thisPlayer && other is PlayerTarget otherPlayer)
-            return thisPlayer.CompareTo(otherPlayer);
-
-        if (this is RadarTarget thisRadar && other is RadarTarget radarTarget)
-            return thisRadar.CompareTo(radarTarget);
-
-        return this is PlayerTarget ? -1 : 1;
+        if (other is null) return -1;
+        return _targetId.CompareTo(other._targetId);
     }
 }

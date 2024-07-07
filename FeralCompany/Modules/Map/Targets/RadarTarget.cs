@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 
 namespace FeralCompany.Modules.Map.Targets;
 
-public sealed class RadarTarget(RadarBoosterItem radar) : MapTarget, IComparable<RadarTarget>
+public sealed class RadarTarget(RadarBoosterItem radar) : MapTarget
 {
     private const string NoRadarName = "NoRadarName";
 
@@ -18,20 +17,7 @@ public sealed class RadarTarget(RadarBoosterItem radar) : MapTarget, IComparable
         Position = radar.transform.position;
         Rotation = new Vector3(90f, 90f, 0f);
         IsInFacility = radar.isInFactory;
+        CameraRotation = Rotation;
         return true;
-    }
-
-    public int CompareTo(RadarTarget? other)
-    {
-        if (other is null)
-            return -1;
-
-        var thisHasName = Name != NoRadarName;
-        var otherHasName = other.Name != NoRadarName;
-
-        if (thisHasName && otherHasName)
-            return string.Compare(Name, other.Name, StringComparison.Ordinal);
-
-        return thisHasName ? -1 : 1;
     }
 }

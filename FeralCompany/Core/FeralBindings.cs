@@ -10,7 +10,7 @@ public class FeralBindings : LcInputActions
     [InputAction("<keyboard>/m", Name = "ToggleMap")]
     internal InputAction ToggleMap { get; set; }
 
-    [InputAction("<keyboard>/.", Name = "Cycle Map Target")]
+    [InputAction("<keyboard>/period", Name = "Cycle Map Target")]
     internal InputAction CycleMapTarget { get; set; }
 
     internal InputAction Alt => _immutableMap["Alt"];
