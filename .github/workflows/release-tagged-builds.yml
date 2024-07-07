@@ -58,25 +58,25 @@ jobs:
       shell: bash
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#  deploy-to-thunderstore:
-#    name: Deploy to Thunderstore
-#    needs: build-release-artifacts
-#    runs-on: ubuntu-latest
-#    steps:
-#    - name: Fetch Sources
-#      uses: actions/checkout@v4
-#    - name: Download Artifacts
-#      uses: actions/download-artifact@v4
-#      with:
-#        name: thunderstore-build
-#    - name: Setup .NET Environment
-#      uses: actions/setup-dotnet@v4
-#      with:
-#        dotnet-version: 8.0.x
-#    - name: Restore Project Tools
-#      run: dotnet tool restore
-#    - name: Deploy to Thunderstore
-#      env:
-#        TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_TOKEN }}
-#      run: |
-#        dotnet build FeralCompany/FeralCompany.csproj -target:PublishThunderstoreArtifact
+  deploy-to-thunderstore:
+    name: Deploy to Thunderstore
+    needs: build-release-artifacts
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch Sources
+      uses: actions/checkout@v4
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: thunderstore-build
+    - name: Setup .NET Environment
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore Project Tools
+      run: dotnet tool restore
+    - name: Deploy to Thunderstore
+      env:
+        TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_TOKEN }}
+      run: |
+        dotnet build FeralCompany/FeralCompany.csproj -target:PublishThunderstoreArtifact
