@@ -60,15 +60,13 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   deploy-to-thunderstore:
     name: Deploy to Thunderstore
-    needs: build-release-artifacts
+    needs: create-release
     runs-on: ubuntu-latest
     steps:
     - name: Fetch Sources
       uses: actions/checkout@v4
     - name: Download Artifacts
       uses: actions/download-artifact@v4
-      with:
-        name: thunderstore-build
     - name: Setup .NET Environment
       uses: actions/setup-dotnet@v4
       with:
