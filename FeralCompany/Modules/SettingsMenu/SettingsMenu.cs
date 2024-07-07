@@ -11,7 +11,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void Awake()
     {
-        SettingsUI = Instantiate(Feral.Assets.PrefabSettingsMenu, transform, false).AddComponent<SettingsMenuUI>();
+        // SettingsUI = Instantiate(Feral.Assets.PrefabSettingsMenu, transform, false).AddComponent<SettingsMenuUI>();
         SettingsUI.Init();
     }
 }

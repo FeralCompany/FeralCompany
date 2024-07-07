@@ -12,13 +12,16 @@ public class SettingsMenuUI : FeralUI
     private GameObject _tabList = null!;
     private GameObject _contentList = null!;
 
-    protected override void OnInit()
+    protected override void AfterAwake()
     {
         _titleLabel = Window.Find("Settings/Title/Text").GetComponent<TMP_Text>();
 
         _tabList = Window.Find("Tabs").gameObject;
         _contentList = Window.Find("Settings/Content").gameObject;
+    }
 
+    protected override void OnInit()
+    {
         Window.Find("Settings/Title/Exit").GetComponent<Button>().onClick.AddListener(Close);
     }
 }

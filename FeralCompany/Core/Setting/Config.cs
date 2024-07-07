@@ -14,10 +14,10 @@ public class Config<T> : SettingBase<T>
 
     private readonly ConfigEntry<T> _entry;
 
-    internal Config(ConfigFile config, string section, string key, T defaultValue)
+    internal Config(ConfigFile config, string section, string key, T defaultValue, string description, AcceptableValueBase? acceptableValues = null)
     {
         DefaultValue = defaultValue;
-        _entry = config.Bind(section, key, defaultValue);
+        _entry = config.Bind(new ConfigDefinition(section, key), defaultValue, new ConfigDescription(description, acceptableValues));
         _entry.SettingChanged += (_, _) => InvokeChangeEvent(_entry.Value);
     }
 }

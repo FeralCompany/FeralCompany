@@ -10,7 +10,12 @@ public class FeralAssets
 
     // Prefabs
     internal GameObject PrefabFeralMap = null!;
-    internal GameObject PrefabSettingsMenu = null!;
+    internal GameObject PrefabMapPointer = null!;
+
+    // Sprites
+    internal Sprite SpriteHome = null!;
+    internal Sprite SpriteExtinguisher = null!;
+    internal Sprite SpriteEntrance = null!;
 
     internal bool Load()
     {
@@ -35,7 +40,12 @@ public class FeralAssets
         return
             // Prefabs
             LoadAsset(assets, "Assets/Prefabs/FeralMap.prefab", out PrefabFeralMap)
-            && LoadAsset(assets, "Assets/Prefabs/SettingsMenu.prefab", out PrefabSettingsMenu);
+            && LoadAsset(assets, "Assets/Prefabs/MapComp/MapPointer.prefab", out PrefabMapPointer)
+
+            // Sprites
+            && LoadAsset(assets, "Assets/Sprites/Home.png", out SpriteHome)
+            && LoadAsset(assets, "Assets/Sprites/Entrance.png", out SpriteEntrance)
+            && LoadAsset(assets, "Assets/Sprites/Extinguisher.png", out SpriteExtinguisher);
     }
 
     private static bool LoadAsset<T>(AssetBundle assets, string path, out T asset) where T : Object

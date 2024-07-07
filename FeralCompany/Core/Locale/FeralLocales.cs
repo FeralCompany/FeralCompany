@@ -16,7 +16,6 @@ internal class FeralLocales
             Locales.Add(parsed.Key, parsed);
         }
 
-        // TODO: Get via config?
         Locale.Current = Feral.Settings.General.Locale;
         return true;
     }

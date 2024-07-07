@@ -6,33 +6,38 @@ namespace FeralCompany.Core.UI;
 public abstract class FeralUI : MonoBehaviour
 {
     protected Transform Window { get; private set; } = null!;
-    protected Canvas Canvas { get; private set; } = null!;
-    protected float OriginalCanvasScale { get; private set; }
-
-    protected float CurrentCanvasScale
-    {
-        get => Canvas.scaleFactor;
-        set => Canvas.scaleFactor = value;
-    }
+    protected RectTransform WindowRect { get; private set; } = null!;
 
     internal event Action? OpenEvent;
     internal event Action? CloseEvent;
 
     internal bool IsOpen { get; private set; }
 
-    internal void Init()
+    protected float UIScale = 1.0f;
+
+    private Canvas _canvas = null!;
+    private float _originalCanvasScale;
+    private float _currentCanvasScale;
+
+    private void Awake()
     {
         Window = transform.Find("Container/Window");
         if (Window)
+        {
             Window.gameObject.SetActive(false);
+            WindowRect = Window.gameObject.GetComponent<RectTransform>();
+        }
 
-        Canvas = GetComponent<Canvas>();
-        OriginalCanvasScale = Canvas.scaleFactor;
+        _canvas = GetComponent<Canvas>();
+        _originalCanvasScale = _canvas.scaleFactor;
+        _currentCanvasScale = _originalCanvasScale;
+        AfterAwake();
+    }
 
-        OpenEvent += OnOpen;
-        CloseEvent += OnClose;
-
+    internal void Init()
+    {
         OnInit();
+        UpdateScale(UIScale);
     }
 
     protected void Update()
@@ -45,6 +50,8 @@ public abstract class FeralUI : MonoBehaviour
 
         if (CanOpen())
             Open();
+
+        AfterUpdate();
     }
 
     internal void Open()
@@ -54,6 +61,8 @@ public abstract class FeralUI : MonoBehaviour
         IsOpen = true;
 
         Window.gameObject.SetActive(true);
+
+        OnOpen();
         OpenEvent?.Invoke();
     }
 
@@ -64,16 +73,37 @@ public abstract class FeralUI : MonoBehaviour
 
         IsOpen = false;
         Window.gameObject.SetActive(false);
+
+        OnClose();
         CloseEvent?.Invoke();
     }
 
+    private void OnDestroy()
+    {
+        OnBaseDestroy();
+    }
+
+    protected abstract void AfterAwake();
     protected abstract void OnInit();
+
+    protected virtual void AfterUpdate() { }
 
     protected virtual void OnOpen() { }
     protected virtual void OnClose() { }
+    protected virtual void OnBaseDestroy() { }
 
-    protected virtual bool CanOpen()
+    protected virtual void HandleScaleUpdate(float width, float height) { }
+
+    protected virtual bool CanOpen() => true;
+
+    internal void UpdateScale(float newScale)
     {
-        return true;
+        UIScale = newScale;
+        _currentCanvasScale = _originalCanvasScale * newScale;
+        _canvas.scaleFactor = _currentCanvasScale;
+
+        var width = WindowRect.sizeDelta.x * _currentCanvasScale;
+        var height = WindowRect.sizeDelta.y * _currentCanvasScale;
+        HandleScaleUpdate(width, height);
     }
 }

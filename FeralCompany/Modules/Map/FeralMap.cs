@@ -1,91 +1,179 @@
-using FeralCompany.Modules.Map.UI;
-using FeralCompany.Utils.LayerMask;
+using FeralCompany.Modules.Map.Targets;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace FeralCompany.Modules.Map;
 
-public class FeralMap : MonoBehaviour
+public sealed class FeralMap : MonoBehaviour
 {
-    internal static FeralMap Create() => new GameObject("FeralMinimap").AddComponent<FeralMap>();
+    private static int TargetCount => Feral.Globals.MapTargets.Count;
 
+    internal MapTarget Target => Feral.Globals.MapTargets[_targetIndex];
     internal Camera Camera { get; private set; } = null!;
-    internal Light Light { get; private set; } = null!;
-    internal MapUI MapUI { get; private set; } = null!;
+
+    private Light _light = null!;
+    private MapUI _ui = null!;
+    private int _targetIndex;
 
     private void Awake()
     {
-        var cameraObject = new GameObject("Feral_MapCamera");
-        cameraObject.transform.SetParent(transform);
-
-        Camera = cameraObject.AddComponent<Camera>();
+        var cameraObj = new GameObject("Feral_MapCamera");
+        cameraObj.transform.SetParent(transform);
+        Camera = cameraObj.AddComponent<Camera>();
         Camera.enabled = false;
         Camera.orthographic = true;
+        Camera.orthographicSize = Feral.Settings.Map.Zoom;
 
-        Light = new GameObject("Feral_MapLight").AddComponent<Light>();
-        Light.transform.SetParent(transform);
-        Light.range = 100;
-        Light.intensity = 15f;
-        Light.type = LightType.Directional;
-        Light.color = Color.white;
-        Light.colorTemperature = 6500;
-        Light.useColorTemperature = true;
-        Light.gameObject.layer = LayerMask.NameToLayer("HelmetVisor");
+        var cameraData = cameraObj.AddComponent<HDAdditionalCameraData>();
+        cameraData.customRenderingSettings = true;
+        cameraData.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.Volumetrics, false);
+        cameraData.renderingPathCustomFrameSettingsOverrideMask.mask[(int)FrameSettingsField.Volumetrics] = true;
 
-        Feral.Player.gameplayCamera.cullingMask =
-            Mask.Remove(Feral.Player.gameplayCamera.cullingMask, Masks.Unused1);
+        _light = new GameObject("Feral_MapLight").AddComponent<Light>();
+        _light.transform.SetParent(transform);
+        _light.range = 100f;
+        _light.type = LightType.Directional;
+        _light.color = Color.white;
+        _light.colorTemperature = 6_500f;
+        _light.useColorTemperature = true;
 
-        var hdCameraData = cameraObject.AddComponent<HDAdditionalCameraData>();
-        hdCameraData.customRenderingSettings = true;
-        hdCameraData.renderingPathCustomFrameSettings.SetEnabled(FrameSettingsField.Volumetrics, false);
-        hdCameraData.renderingPathCustomFrameSettingsOverrideMask.mask[(int)FrameSettingsField.Volumetrics] = true;
-
-        gameObject.AddComponent<MapTarget>();
-
-        MapUI = Instantiate(Feral.Assets.PrefabFeralMap, transform).AddComponent<MapUI>();
-        MapUI.Init();
-        MapUI.OpenEvent += OnMapOpen;
-        MapUI.CloseEvent += OnMapClose;
-
-        Feral.Settings.Map.CullingMask.ChangeEvent += UpdateCullingMask;
-        Feral.Settings.Map.Scale.ChangeEvent += ChangeMapScale;
+        _ui = Instantiate(Feral.Assets.PrefabFeralMap, transform).AddComponent<MapUI>();
 
         UpdateCullingMask(Feral.Settings.Map.CullingMask);
-        ChangeMapScale(Feral.Settings.Map.Scale);
+
+        _ui.Init();
+        _ui.OpenEvent += OnOpenMap;
+        _ui.CloseEvent += OnCloseMap;
+
+        IngamePlayerSettings.Instance.playerInput.actions.FindAction("SwitchItem").performed += OnMouseScroll;
     }
 
-    private void Update()
+    private void Start()
     {
-        Camera.orthographicSize = Feral.Settings.Map.Zoom;
-        Light.transform.position = Camera.transform.position + Vector3.up * 30f;
+        Feral.Bindings.ToggleMap.performed += _ =>
+        {
+            Feral.Settings.Map.Enable.Value = !Feral.Settings.Map.Enable.Value;
+            if (Feral.Settings.Map.Enable)
+                _ui.Open();
+            else
+                _ui.Close();
+        };
+
+        Feral.Bindings.CycleMapTarget.performed += _ => NextTarget();
+
+        RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
+        RenderPipelineManager.endCameraRendering += EndCameraRendering;
+        Feral.Settings.Map.CullingMask.ChangeEvent += UpdateCullingMask;
+        Feral.Settings.Map.Zoom.ChangeEvent += UpdateZoom;
     }
 
-    private void OnMapOpen()
+    private static void OnMouseScroll(InputAction.CallbackContext context)
     {
+        if (Feral.Bindings.Shift.IsPressed()
+            && Feral.Bindings.Alt.IsPressed())
+        {
+            var value = context.ReadValue<float>();
+            var current = Feral.Settings.Map.Scale.Value;
+            var multiplier = current / 100;
+            var newValue = Mathf.Clamp(current - value * multiplier, 1, 5);
+            Feral.Settings.Map.Scale.Value = newValue;
+            return;
+        }
+
+        if (Feral.Bindings.Alt.IsPressed())
+        {
+            var value = context.ReadValue<float>();
+            var current = Feral.Settings.Map.Zoom.Value;
+            var multiplier = current / 100 * 8;
+            var newValue = Mathf.Clamp(current - value * multiplier, 1, 100);
+            Feral.Settings.Map.Zoom.Value = newValue;
+        }
+    }
+
+    private void OnOpenMap()
+    {
+        Camera.rect = _ui.CameraRect;
         Camera.enabled = true;
-        Camera.rect = MapUI.CameraRect;
     }
 
-    private void OnMapClose()
+    private void OnCloseMap()
     {
         Camera.enabled = false;
+    }
+
+    private const float NorthAtan2 = 1.570796f;
+    private void Update()
+    {
+
+        ValidateTarget();
+        foreach (var pointer in Feral.CurrentRound.Pointers)
+            pointer.UpdateFor(Target);
+
+        _light.intensity = Target.IsInFacility ? Feral.Settings.Map.InternalLight : Feral.Settings.Map.ExternalLight;
+
+        _light.transform.position = Target.Position + Vector3.up * 30f;
+        _light.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+
+        var angle = NorthAtan2 - Mathf.Atan2(Target.Forward.x, Target.Forward.z);
+        angle *= Mathf.Rad2Deg;
+        angle = (angle + 360) % 360;
+        _ui.CompassRotation = Quaternion.Euler(0f, 0f, -angle);
+    }
+
+    private void LateUpdate()
+    {
+        var target = Target;
+        _ui.TargetName = Target.Name;
+
+        Camera.transform.position = target.CameraPosition;
+        Camera.transform.eulerAngles = target.CameraRotation;
+        Camera.nearClipPlane = target.NearClipPlane;
     }
 
     private void OnDestroy()
     {
+        RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
+        RenderPipelineManager.endCameraRendering -= EndCameraRendering;
         Feral.Settings.Map.CullingMask.ChangeEvent -= UpdateCullingMask;
-        Feral.Settings.Map.Scale.ChangeEvent -= ChangeMapScale;
+        Feral.Settings.Map.Zoom.ChangeEvent -= UpdateZoom;
+        IngamePlayerSettings.Instance.playerInput.actions.FindAction("SwitchItem").performed -= OnMouseScroll;
     }
 
-    private void ChangeMapScale(float scaleFactor)
+    private void BeginCameraRendering(ScriptableRenderContext _, Camera camera) => _light.enabled = Camera == camera;
+    private void EndCameraRendering(ScriptableRenderContext _, Camera camera) => _light.enabled = false;
+
+    private void UpdateCullingMask(int mask) => Camera.cullingMask = mask;
+    private void UpdateZoom(float zoom) => Camera.orthographicSize = zoom;
+
+    private void NextTarget()
     {
-        MapUI.ChangeMapScale(scaleFactor);
-        if (MapUI.IsOpen)
-            Camera.rect = MapUI.CameraRect;
+        _targetIndex++;
+        if (_targetIndex < 0 || _targetIndex >= TargetCount)
+            _targetIndex = 0;
     }
 
-    private void UpdateCullingMask(Masks[] masks)
+    private void ValidateTarget()
     {
-        Camera.cullingMask = Mask.Compress(masks);
+        if (TargetCount == 0)
+            return;
+
+        if (_targetIndex < 0)
+            _targetIndex = 0;
+
+        if (_targetIndex >= TargetCount)
+            _targetIndex = TargetCount - 1;
+
+        var startIndex = _targetIndex;
+        while (!Target.ValidateTarget())
+        {
+            _targetIndex++;
+            if (_targetIndex >= TargetCount)
+                _targetIndex = 0;
+
+            if (_targetIndex == startIndex)
+                return;
+        }
     }
 }
