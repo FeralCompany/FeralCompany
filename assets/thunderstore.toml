@@ -31,7 +31,7 @@ repository = "https://thunderstore.io"
 
 [package]
 containsNsfwContent = false
-description = "Collection of game \"enhancements\" such as Pathfinding, ESP, Minimap, Night Vision, etc."
+description = "Collection of game \"enhancements\" such as Minimap, Night Vision, etc."
 name = "FeralCompany"
 namespace = "Ferus"
 websiteUrl = "https://github.com/FerusGrim/FeralCompany"

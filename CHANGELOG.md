@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added "Pointer" system to Map
   - Will track Fire exits, main entrances, and the ship. Both from inside
     and outside the facility.
+- Added NightVision (Both inside and outside intensities configurable)
+- Add a Map light (Both inside and outside intensities configurable)
+- README.md finally updated
 
 ### Removed
 
