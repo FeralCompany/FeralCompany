@@ -1,9 +1,8 @@
 ![FeralCompany Banner](https://media.githubusercontent.com/media/FeralCompany/FeralCompany/main/.github/images/feralcompany-static-banner.png "FeralCompany Icon")
 
-
-[![Build](https://img.shields.io/github/actions/workflow/status/FeralCompany/FeralCompany/build.yml?branch=main&style=for-the-badge&logo=github)](https://github.com/FeralCompany/FeralMinimap/actions/workflows/build.yml)
-[![Latest Version](https://img.shields.io/thunderstore/v/Ferus/FeralCompany?style=for-the-badge&logo=thunderstore)](https://thunderstore.io/c/lethal-company/p/FeralCompany/FeralMinimap)
-[![Total Downloads](https://img.shields.io/thunderstore/dt/Ferus/FeralCompany?style=for-the-badge&logo=thunderstore)](https://thunderstore.io/c/lethal-company/p/FeralCompany/FeralMinimap)
+[![Build](https://img.shields.io/github/actions/workflow/status/FeralCompany/FeralCompany/build.yml?branch=main&style=for-the-badge&logo=github)](https://github.com/FeralCompany/FeralCompany/actions/workflows/build.yml)
+[![Latest Version](https://img.shields.io/thunderstore/v/Ferus/FeralCompany?style=for-the-badge&logo=thunderstore)](https://thunderstore.io/c/lethal-company/p/Ferus/FeralCompany)
+[![Total Downloads](https://img.shields.io/thunderstore/dt/Ferus/FeralCompany?style=for-the-badge&logo=thunderstore)](https://thunderstore.io/c/lethal-company/p/Ferus/FeralCompany)
 
 # FeralCompany
 

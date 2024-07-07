@@ -34,7 +34,7 @@ containsNsfwContent = false
 description = "Collection of game \"enhancements\" such as Minimap, Night Vision, etc."
 name = "FeralCompany"
 namespace = "Ferus"
-websiteUrl = "https://github.com/FerusGrim/FeralCompany"
+websiteUrl = "https://github.com/FeralCompany/FeralCompany"
 
 [package.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
