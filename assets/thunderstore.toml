@@ -38,6 +38,7 @@ websiteUrl = "https://github.com/FeralCompany/FeralCompany"
 
 [package.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
+Rune580-LethalCompany_InputUtils = "0.7.7"
 
 [publish]
 communities = ["lethal-company"]

@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using BepInEx;
 using FeralCompany.Core;
@@ -8,9 +7,11 @@ using FeralCompany.Modules.Map;
 using GameNetcodeStuff;
 using HarmonyLib;
 using UnityEngine;
+using InputUtils = LethalCompanyInputUtils.PluginInfo;
 
 namespace FeralCompany;
 
+[BepInDependency(InputUtils.PLUGIN_GUID)]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class Feral : BaseUnityPlugin
 {

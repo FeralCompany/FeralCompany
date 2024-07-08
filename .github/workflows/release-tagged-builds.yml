@@ -90,4 +90,4 @@ jobs:
       env:
         TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_API_TOKEN }}
       run: |
-        dotnet build FeralCompany/FeralCompany.csproj -target:PublishThunderstoreArtifact
+        dotnet build -target:PublishThunderstoreArtifact
