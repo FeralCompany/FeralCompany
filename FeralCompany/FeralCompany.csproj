@@ -21,6 +21,7 @@
             https://nuget.bepinex.dev/v3/index.json;
             https://nuget.windows10ce.com/nuget/v3/index.json
         </RestoreAdditionalProjectSources>
+        <RootDir>$(ProjectDir)..</RootDir>
     </PropertyGroup>
     <ItemGroup Label="Global Dependencies">
         <PackageReference Include="MinVer" Version="5.0.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
@@ -41,9 +42,9 @@
         </PropertyGroup>
     </Target>
     <Target Name="PackageThunderstoreArtifact" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
-        <Exec Command="dotnet tcli build --config-path assets/thunderstore.toml --package-version $(Version)" />
+        <Exec Command="dotnet tcli build --config-path $(RootDir)/assets/thunderstore.toml --package-version $(Version)" />
     </Target>
     <Target Name="PublishThunderstoreArtifact" DependsOnTargets="PackageThunderstoreArtifact">
-        <Exec Command="dotnet tcli publish --config-path assets/thunderstore.toml --file build-artifacts/*-$(Version).zip" />
+        <Exec Command="dotnet tcli publish --config-path $(RootDir)/assets/thunderstore.toml --file $(RootDir)/build-artifacts/*-$(Version).zip" />
     </Target>
 </Project>
