@@ -84,6 +84,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Restore Project Tools
+      run: dotnet tool restore
     - name: Deploy to Thunderstore
       env:
         TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_API_TOKEN }}
