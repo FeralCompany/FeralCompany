@@ -41,9 +41,9 @@
         </PropertyGroup>
     </Target>
     <Target Name="PackageThunderstoreArtifact" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
-        <Exec Command="dotnet tcli build --config-path $(SolutionDir)/assets/thunderstore.toml --package-version $(Version)" />
+        <Exec Command="dotnet tcli build --config-path assets/thunderstore.toml --package-version $(Version)" />
     </Target>
     <Target Name="PublishThunderstoreArtifact" DependsOnTargets="PackageThunderstoreArtifact">
-        <Exec Command="dotnet tcli publish --config-path $(SolutionDir)/assets/thunderstore.toml --file $(SolutionDir)/dist/*-$(Version).zip" />
+        <Exec Command="dotnet tcli publish --config-path assets/thunderstore.toml --file build-artifacts/*-$(Version).zip" />
     </Target>
 </Project>
