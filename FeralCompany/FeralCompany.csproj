@@ -35,17 +35,15 @@
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="56.0.0-ngd.0" />
         <PackageReference Include="Rune580-LethalCompany_InputUtils" Version="0.7.7" PrivateAssets="all" />
     </ItemGroup>
-    <Target Name="SanitizeVersion" AfterTargets="MinVer">
-        <Message Text="Raw Version: $(Version)" Importance="high"/>
+    <Target Name="SanitizeVersion" DependsOnTargets="MinVer">
         <PropertyGroup>
-            <PackageVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PackageVersion>
+            <Version>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</Version>
         </PropertyGroup>
-        <Message Text="Sanitized Version: $(PackageVersion)" Importance="high"/>
     </Target>
-    <Target Name="PackageThunderstoreArtifact" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
-        <Exec Command="dotnet tcli build --config-path $(RootDir)/assets/thunderstore.toml --package-version $(PackageVersion)" />
+    <Target Name="PackageThunderstoreArtifact" DependsOnTargets="SanitizeVersion" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
+        <Exec Command="dotnet tcli build --config-path $(RootDir)/assets/thunderstore.toml --package-version $(Version)" />
     </Target>
     <Target Name="PublishThunderstoreArtifact" DependsOnTargets="SanitizeVersion">
-        <Exec Command="dotnet tcli publish --config-path $(RootDir)/assets/thunderstore.toml --file $(RootDir)/build-artifacts/*-$(PackageVersion).zip" />
+        <Exec Command="dotnet tcli publish --config-path $(RootDir)/assets/thunderstore.toml --file $(RootDir)/build-artifacts/$(Author)-$(Product)-$(Version).zip" />
     </Target>
 </Project>
