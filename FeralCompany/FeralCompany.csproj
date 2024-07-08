@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup Label="Project Properties">
-        <Product>FeralCompany</Product>
         <Author>Ferus</Author>
+        <Product>FeralCompany</Product>
         <RootNamespace>$(Product)</RootNamespace>
         <AssemblyName>$(Product)</AssemblyName>
     </PropertyGroup>
@@ -45,6 +45,6 @@
         <Exec Command="dotnet tcli build --config-path $(RootDir)/assets/thunderstore.toml --package-version $(Version)" />
     </Target>
     <Target Name="PublishThunderstoreArtifact" DependsOnTargets="PackageThunderstoreArtifact">
-        <Exec Command="dotnet tcli publish --config-path $(RootDir)/assets/thunderstore.toml --file $(RootDir)/build-artifacts/*-$(Version).zip" />
+        <Exec Command="dotnet tcli publish --config-path $(RootDir)/assets/thunderstore.toml --file $(RootDir)/build-artifacts/$(Author)-$(Product)-$(Version).zip" />
     </Target>
 </Project>
