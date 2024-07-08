@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Nothing, yet!
 
+## Version 1.0.10
+
+### Changes
+
+- Specified InputUtils as a dependency, which was missing before.
+
 ## Version 1.0.0
 
 ### Added
