@@ -15,7 +15,10 @@ public sealed class PlayerTarget(PlayerControllerB player) : MapTarget
         IsInElevator = player.isInElevator;
         IsInShip = player.isInHangarShipRoom;
         IsInFacility = player.isInsideFactory;
-
+        if (player.deadBody == null)
+        {
+            return false;
+        }
         var localTransform = IsDead ? player.deadBody.transform : player.transform;
         Position = localTransform.position;
         Forward = localTransform.forward;
