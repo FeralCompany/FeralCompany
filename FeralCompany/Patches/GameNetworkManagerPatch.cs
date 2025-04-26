@@ -13,9 +13,12 @@ internal static class GameNetworkManagerPatch
     private static void PostFix_SubscribeToConnectionCallbacks()
     {
         if (!_subscribed) return;
-
         NetworkManager.Singleton.OnClientConnectedCallback += Feral.Events.InvokeClientConnect;
         NetworkManager.Singleton.OnClientDisconnectCallback += Feral.Events.InvokeClientDisconnect;
         _subscribed = true;
     }
+
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(GameNetworkManager.Disconnect))]
+    private static void PostFix_Disconnect() => Feral.Events.InvokeExitGame();
 }

@@ -46,3 +46,4 @@ FeralCompany/[Oo]bj/
 
 # Include Unity files (Child .gitignore used)
 !FeralCompany_Unity
+/FeralCompany/FeralCompany.csproj
