@@ -17,7 +17,7 @@ public sealed class PlayerTarget(PlayerControllerB player) : MapTarget
         IsInFacility = player.isInsideFactory;
         if (player.deadBody == null)
         {
-            return false;
+            IsDead = false;
         }
         var localTransform = IsDead ? player.deadBody.transform : player.transform;
         Position = localTransform.position;
