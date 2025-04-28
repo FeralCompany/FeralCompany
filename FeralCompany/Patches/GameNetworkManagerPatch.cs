@@ -14,8 +14,8 @@ internal static class GameNetworkManagerPatch
     {
         if (!_subscribed) return;
 
-        NetworkManager.Singleton.OnClientConnectedCallback += Feral.Events.InvokeClientConnect;
-        NetworkManager.Singleton.OnClientDisconnectCallback += Feral.Events.InvokeClientDisconnect;
+        NetworkManager.Singleton.OnClientConnectedCallback += FeralCompany.Events.InvokeClientConnect;
+        NetworkManager.Singleton.OnClientDisconnectCallback += FeralCompany.Events.InvokeClientDisconnect;
         _subscribed = true;
     }
 }

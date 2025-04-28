@@ -42,7 +42,7 @@ public abstract class FeralUI : MonoBehaviour
 
     protected void Update()
     {
-        if (Feral.Player.quickMenuManager.isMenuOpen)
+        if (FeralCompany.Player.quickMenuManager.isMenuOpen)
         {
             Close();
             return;

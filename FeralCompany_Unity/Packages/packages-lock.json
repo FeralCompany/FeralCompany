@@ -351,7 +351,7 @@
       "depth": 0,
       "source": "registry",
       "url": "https://packages.unity.com",
-      "version": "3.0.6"
+      "version": "3.0.9"
     },
     "com.unity.timeline": {
       "dependencies": {

@@ -11,14 +11,6 @@ public sealed class CurrentRoundData : MonoBehaviour
 
     private readonly List<MapPointer> _pointers = [];
 
-    private void OnExitMoon()
-    {
-        foreach (var pointer in _pointers)
-            Destroy(pointer.PointerObject);
-
-        _pointers.Clear();
-    }
-
     private void OnEnterMoon()
     {
         var obj = GameObject.Find("CatwalkShip") ?? throw new NullReferenceException("CatwalkShip not available??");
@@ -27,24 +19,34 @@ public sealed class CurrentRoundData : MonoBehaviour
         foreach (var teleport in FindObjectsOfType<EntranceTeleport>())
             CreatePointer(teleport.entranceId, teleport.entrancePoint.position, teleport.isEntranceToBuilding);
 
-        Feral.Events.InvokePointersCreated(_pointers.ToArray());
+        FeralCompany.Events.InvokePointersCreated(_pointers.ToArray());
+    }
+
+    private void OnExitMoon()
+    {
+        foreach (var pointer in _pointers)
+            Destroy(pointer.PointerObject);
+
+        var pointersCopy = _pointers.ToArray();
+        _pointers.Clear();
+        FeralCompany.Events.InvokePointersDestroyed(pointersCopy);
     }
 
     private void Awake()
     {
-        Feral.Events.OnEnterMoon += OnEnterMoon;
-        Feral.Events.OnExitMoon += OnExitMoon;
+        FeralCompany.Events.OnEnterMoon += OnEnterMoon;
+        FeralCompany.Events.OnExitMoon += OnExitMoon;
     }
 
     private void OnDestroy()
     {
-        Feral.Events.OnEnterMoon -= OnEnterMoon;
-        Feral.Events.OnExitMoon -= OnExitMoon;
+        FeralCompany.Events.OnEnterMoon -= OnEnterMoon;
+        FeralCompany.Events.OnExitMoon -= OnExitMoon;
     }
 
     private void CreatePointer(int entranceId, Vector3 destination, bool entrance)
     {
-        var obj = Instantiate(Feral.Assets.PrefabMapPointer);
+        var obj = Instantiate(FeralCompany.Assets.PrefabMapPointer);
         obj.name = $"Pointer_{entranceId}_{(entrance ? "Entrance" : "Exit")}";
 
         var controller = obj.AddComponent<PointerController>();

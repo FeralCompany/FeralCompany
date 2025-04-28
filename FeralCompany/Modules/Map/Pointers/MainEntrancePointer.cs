@@ -7,7 +7,7 @@ public sealed class MainEntrancePointer(GameObject pointerObject, PointerControl
 {
     protected internal override Sprite GetIcon()
     {
-        return Feral.Assets.SpriteEntrance;
+        return FeralCompany.Assets.SpriteEntrance;
     }
 
     protected override bool VisibleFor(MapTarget target)
@@ -15,11 +15,11 @@ public sealed class MainEntrancePointer(GameObject pointerObject, PointerControl
         return IsEntrance switch
         {
             true when target is { IsOutsideFacility: true, IsOutsideShip: true } => target is RadarTarget
-                ? Feral.Settings.Map.PointerExternalEntranceRadar
-                : Feral.Settings.Map.PointerExternalEntrance,
+                ? FeralCompany.Settings.Map.PointerExternalEntranceRadar
+                : FeralCompany.Settings.Map.PointerExternalEntrance,
             false when target.IsInFacility => target is RadarTarget
-                ? Feral.Settings.Map.PointerInternalEntranceRadar
-                : Feral.Settings.Map.PointerInternalEntrance,
+                ? FeralCompany.Settings.Map.PointerInternalEntranceRadar
+                : FeralCompany.Settings.Map.PointerInternalEntrance,
             _ => false
         };
     }

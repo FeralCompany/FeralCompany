@@ -11,6 +11,7 @@ public class FeralAssets
     // Prefabs
     internal GameObject PrefabFeralMap = null!;
     internal GameObject PrefabMapPointer = null!;
+    internal GameObject PrefabTestPrefab = null!;
 
     // Sprites
     internal Sprite SpriteHome = null!;
@@ -22,16 +23,16 @@ public class FeralAssets
         var assets = AssetBundle.LoadFromFile(AssetPath);
         if (!assets)
         {
-            Feral.IO.Error($"Failed to load assets @ {AssetPath}!");
-            Feral.IO.Error("FeralCompany will shut down, now.");
+            FeralCompany.IO.Error($"Failed to load assets @ {AssetPath}!");
+            FeralCompany.IO.Error("FeralCompany will shut down, now.");
             return false;
         }
 
         if (LoadAllAssets(assets))
             return true;
 
-        Feral.IO.Error("One or more assets failed to load.");
-        Feral.IO.Error("FeralCompany will shut down, now.");
+        FeralCompany.IO.Error("One or more assets failed to load.");
+        FeralCompany.IO.Error("FeralCompany will shut down, now.");
         return false;
     }
 
@@ -41,6 +42,7 @@ public class FeralAssets
             // Prefabs
             LoadAsset(assets, "Assets/Prefabs/FeralMap.prefab", out PrefabFeralMap)
             && LoadAsset(assets, "Assets/Prefabs/MapComp/MapPointer.prefab", out PrefabMapPointer)
+            && LoadAsset(assets, "Assets/Prefabs/TestPrefab.prefab", out PrefabTestPrefab)
 
             // Sprites
             && LoadAsset(assets, "Assets/Sprites/Home.png", out SpriteHome)
@@ -54,7 +56,7 @@ public class FeralAssets
         if (asset)
             return true;
 
-        Feral.IO.Error($"Failed to load asset @ {AssetPath} => {path}");
+        FeralCompany.IO.Error($"Failed to load asset @ {AssetPath} => {path}");
         return false;
     }
 }

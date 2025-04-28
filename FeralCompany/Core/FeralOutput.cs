@@ -8,8 +8,8 @@ public class FeralOutput(ManualLogSource source)
 {
     private const string LogTemplate = "[{0}#{1}:L{2}] {3}";
 
-    internal void Status(object msg) => Feral.HUD.DisplayStatusEffect(msg.ToString());
-    internal void Debug(object msg) => Feral.HUD.SetDebugText(msg.ToString());
+    internal void Status(object msg) => FeralCompany.HUD.DisplayStatusEffect(msg.ToString());
+    internal void Debug(object msg) => FeralCompany.HUD.SetDebugText(msg.ToString());
 
     internal void Info(object data,
         [CallerFilePath] string caller = "",

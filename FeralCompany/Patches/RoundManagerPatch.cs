@@ -7,5 +7,5 @@ public static class RoundManagerPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch("RefreshEnemiesList")]
-    private static void PostFix_RefreshEnemiesList() => Feral.Events.InvokeEnterMoon();
+    private static void PostFix_RefreshEnemiesList() => FeralCompany.Events.InvokeEnterMoon();
 }

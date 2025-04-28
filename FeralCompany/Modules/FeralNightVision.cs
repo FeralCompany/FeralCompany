@@ -12,7 +12,7 @@ public class FeralNightVision : MonoBehaviour
     private void Awake()
     {
         var mapCamera = GameObject.Find("MapCamera").transform;
-        transform.SetParent(Feral.Player.gameplayCamera.transform);
+        transform.SetParent(FeralCompany.Player.gameplayCamera.transform);
 
         _nearLight = new GameObject("NearLight").AddComponent<Light>();
         _nearLight.transform.SetParent(transform);
@@ -28,15 +28,15 @@ public class FeralNightVision : MonoBehaviour
 
     private void Update()
     {
-        if (Feral.Player.isInsideFactory)
+        if (FeralCompany.Player.isInsideFactory)
         {
-            _nearLight.intensity = Feral.Settings.General.InternalNightVisionIntensity.Value * 100f;
-            _farLight.intensity = Feral.Settings.General.InternalNightVisionIntensity.Value * 1100f;
+            _nearLight.intensity = FeralCompany.Settings.General.InternalNightVisionIntensity.Value * 100f;
+            _farLight.intensity = FeralCompany.Settings.General.InternalNightVisionIntensity.Value * 1100f;
         }
         else
         {
-            _nearLight.intensity = Feral.Settings.General.ExternalNightVisionIntensity.Value * 100f;
-            _farLight.intensity = Feral.Settings.General.ExternalNightVisionIntensity.Value * 1100f;
+            _nearLight.intensity = FeralCompany.Settings.General.ExternalNightVisionIntensity.Value * 100f;
+            _farLight.intensity = FeralCompany.Settings.General.ExternalNightVisionIntensity.Value * 1100f;
         }
     }
 
@@ -54,7 +54,7 @@ public class FeralNightVision : MonoBehaviour
 
     private void BeginCameraRendering(ScriptableRenderContext _, Camera camera)
     {
-        if (Feral.Player.gameplayCamera != camera) return;
+        if (FeralCompany.Player.gameplayCamera != camera) return;
 
         _farLight.enabled = true;
         _nearLight.enabled = true;

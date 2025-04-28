@@ -27,20 +27,34 @@
         <PackageReference Include="MinVer" Version="5.0.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
-        <PackageReference Include="BepInEx.Core" Version="5.*" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
     <ItemGroup Label="CI-Only Dependencies" Condition="$(CI) == 'true'">
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" />
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="56.0.0-ngd.0" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Rune580-LethalCompany_InputUtils" Version="0.7.7" PrivateAssets="all" />
+    </ItemGroup>
+    <ItemGroup Label="Include Unity Scripts">
+        <Compile Include="$(RootDir)/FeralCompany_Unity/Assets/Scripts/**/*.cs">
+            <Link>Unity/%(RecursiveDir)%(FileName)%(Extension)</Link>
+        </Compile>
+        <Compile Update="Modules\Map\UI\MapController.cs">
+          <Link>Unity\UI\MapController.cs</Link>
+        </Compile>
+        <Compile Update="Modules\Map\UI\MapPointerController.cs">
+          <Link>Unity\UI\MapPointerController.cs</Link>
+        </Compile>
+        <Compile Update="Modules\Map\UI\UIScaler.cs">
+          <Link>Unity\UI\UIScaler.cs</Link>
+        </Compile>
     </ItemGroup>
     <Target Name="SanitizeVersion" DependsOnTargets="MinVer">
         <PropertyGroup>
             <Version>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</Version>
         </PropertyGroup>
     </Target>
-    <Target Name="PackageThunderstoreArtifact" DependsOnTargets="SanitizeVersion" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
+    <Target Name="PackageThunderstoreArtifact" AfterTargets="PostBuildEvent" Condition="$(Configuration) == 'Release'">
         <Exec Command="dotnet tcli build --config-path $(RootDir)/assets/thunderstore.toml --package-version $(Version)" />
     </Target>
     <Target Name="PublishThunderstoreArtifact" DependsOnTargets="SanitizeVersion">

@@ -13,19 +13,11 @@ public class FeralSettings(ConfigFile config)
 
     internal class GeneralSettings
     {
-        // TODO: Make this configurable, when there is actually translatable text.
-        // private readonly Config<string> localeString = new Config<string>(config, "General", "Locale", "en_US");
-
-        internal readonly SettingBase<Locale.Locale> Locale;
         internal readonly Config<int> InternalNightVisionIntensity;
         internal readonly Config<int> ExternalNightVisionIntensity;
 
         internal GeneralSettings(ConfigFile config)
         {
-            Setting<string> localeString = new("en_US");
-            Locale = new FuncSetting<string, Locale.Locale>(localeString, key => Feral.Locales.Locales[key],
-                locale => locale.Key);
-
             InternalNightVisionIntensity = new Config<int>(config, "NightVision", "Facility Intensity", 0,
                 "The intensity of the night vision while inside the facility.",
                 new AcceptableValueRange<int>(0, 100)

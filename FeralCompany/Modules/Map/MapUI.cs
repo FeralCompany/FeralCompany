@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FeralCompany.Core.Setting;
 using FeralCompany.Core.UI;
 using FeralCompany.Modules.Map.Pointers;
 using TMPro;
@@ -22,6 +23,9 @@ public sealed class MapUI : FeralUI
 
     internal Rect CameraRect { get; private set; }
 
+    private static RectTransform Tooltips => FeralCompany.HUD.Tooltips.canvasGroup.gameObject.GetComponent<RectTransform>();
+    private static readonly Setting<Vector2> TooltipAnchorPosition = new(Tooltips.anchoredPosition);
+
     private TMP_Text _targetNameText = null!;
     private RectTransform _compassTransform = null!;
     private Transform _pointers = null!;
@@ -37,15 +41,15 @@ public sealed class MapUI : FeralUI
 
     protected override void OnInit()
     {
-        Feral.Events.OnPointersCreated += OnPointersCreated;
-        Feral.Settings.Map.Scale.ChangeEvent += UpdateScale;
-        UIScale = Feral.Settings.Map.Scale;
+        FeralCompany.Events.OnPointersCreated += OnPointersCreated;
+        FeralCompany.Settings.Map.Scale.ChangeEvent += UpdateScale;
+        UIScale = FeralCompany.Settings.Map.Scale;
     }
 
     protected override void OnBaseDestroy()
     {
-        Feral.Events.OnPointersCreated -= OnPointersCreated;
-        Feral.Settings.Map.Scale.ChangeEvent -= UpdateScale;
+        FeralCompany.Events.OnPointersCreated -= OnPointersCreated;
+        FeralCompany.Settings.Map.Scale.ChangeEvent -= UpdateScale;
     }
 
     private void OnPointersCreated(IReadOnlyList<MapPointer> pointers)
@@ -66,6 +70,9 @@ public sealed class MapUI : FeralUI
         _pointers.gameObject.SetActive(transform);
     }
 
+    protected override void OnOpen() => Tooltips.anchoredPosition = TooltipAnchorPosition;
+    protected override void OnClose() => Tooltips.anchoredPosition = TooltipAnchorPosition.DefaultValue;
+
     protected override void HandleScaleUpdate(float width, float height)
     {
         var position = WindowRect.position;
@@ -76,12 +83,15 @@ public sealed class MapUI : FeralUI
             height / Screen.height
         );
 
-        if (IsOpen)
-            Feral.Map.Camera.rect = CameraRect;
+        TooltipAnchorPosition.Value = TooltipAnchorPosition.DefaultValue - new Vector2(0, height);
+        if (!IsOpen) return;
+
+        FeralCompany.Map.Camera.rect = CameraRect;
+        Tooltips.anchoredPosition = TooltipAnchorPosition;
     }
 
     protected override bool CanOpen()
     {
-        return Feral.Settings.Map.Enable;
+        return FeralCompany.Settings.Map.Enable;
     }
 }

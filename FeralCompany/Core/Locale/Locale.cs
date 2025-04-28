@@ -15,7 +15,7 @@ public class Locale(string key, string name, string? fallback, Dictionary<string
     internal string GetEntry(string key)
     {
         if (!TryGetEntry(key, out var entry))
-            Feral.IO.Warn($"Locale '{key}' does not contain entry: {key}");
+            FeralCompany.IO.Warn($"Locale '{key}' does not contain entry: {key}");
 
         return entry;
     }
@@ -23,7 +23,7 @@ public class Locale(string key, string name, string? fallback, Dictionary<string
     internal string GetEntry(string key, params object[] data)
     {
         if (!TryGetEntry(key, out var entry))
-            Feral.IO.Warn($"Locale '{key}' does not contain entry: {key}");
+            FeralCompany.IO.Warn($"Locale '{key}' does not contain entry: {key}");
 
         return string.Format(entry, data);
     }
@@ -33,7 +33,7 @@ public class Locale(string key, string name, string? fallback, Dictionary<string
         if (Entries.TryGetValue(key, out entry))
             return true;
 
-        if (Fallback != null && Feral.Locales.Locales.TryGetValue(Fallback, out var fallback))
+        if (Fallback != null && FeralCompany.Locales.Locales.TryGetValue(Fallback, out var fallback))
             return fallback.TryGetEntry(key, out entry);
 
         entry = key;

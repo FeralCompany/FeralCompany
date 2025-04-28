@@ -8,9 +8,9 @@ namespace FeralCompany.Modules.Map;
 
 public sealed class FeralMap : MonoBehaviour
 {
-    private static int TargetCount => Feral.Globals.MapTargets.Count;
+    private static int TargetCount => FeralCompany.Globals.MapTargets.Count;
 
-    internal MapTarget Target => Feral.Globals.MapTargets[_targetIndex];
+    internal MapTarget Target => FeralCompany.Globals.MapTargets[_targetIndex];
     internal Camera Camera { get; private set; } = null!;
 
     private Light _light = null!;
@@ -24,7 +24,7 @@ public sealed class FeralMap : MonoBehaviour
         Camera = cameraObj.AddComponent<Camera>();
         Camera.enabled = false;
         Camera.orthographic = true;
-        Camera.orthographicSize = Feral.Settings.Map.Zoom;
+        Camera.orthographicSize = FeralCompany.Settings.Map.Zoom;
 
         var cameraData = cameraObj.AddComponent<HDAdditionalCameraData>();
         cameraData.customRenderingSettings = true;
@@ -39,9 +39,9 @@ public sealed class FeralMap : MonoBehaviour
         _light.colorTemperature = 6_500f;
         _light.useColorTemperature = true;
 
-        _ui = Instantiate(Feral.Assets.PrefabFeralMap, transform).AddComponent<MapUI>();
+        _ui = Instantiate(FeralCompany.Assets.PrefabFeralMap, transform).AddComponent<MapUI>();
 
-        UpdateCullingMask(Feral.Settings.Map.CullingMask);
+        UpdateCullingMask(FeralCompany.Settings.Map.CullingMask);
 
         _ui.Init();
         _ui.OpenEvent += OnOpenMap;
@@ -52,43 +52,43 @@ public sealed class FeralMap : MonoBehaviour
 
     private void Start()
     {
-        Feral.Bindings.ToggleMap.performed += _ =>
+        FeralCompany.Bindings.ToggleMap.performed += _ =>
         {
-            Feral.Settings.Map.Enable.Value = !Feral.Settings.Map.Enable.Value;
-            if (Feral.Settings.Map.Enable)
+            FeralCompany.Settings.Map.Enable.Value = !FeralCompany.Settings.Map.Enable.Value;
+            if (FeralCompany.Settings.Map.Enable)
                 _ui.Open();
             else
                 _ui.Close();
         };
 
-        Feral.Bindings.CycleMapTarget.performed += _ => NextTarget();
+        FeralCompany.Bindings.CycleMapTarget.performed += _ => NextTarget();
 
         RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
         RenderPipelineManager.endCameraRendering += EndCameraRendering;
-        Feral.Settings.Map.CullingMask.ChangeEvent += UpdateCullingMask;
-        Feral.Settings.Map.Zoom.ChangeEvent += UpdateZoom;
+        FeralCompany.Settings.Map.CullingMask.ChangeEvent += UpdateCullingMask;
+        FeralCompany.Settings.Map.Zoom.ChangeEvent += UpdateZoom;
     }
 
     private static void OnMouseScroll(InputAction.CallbackContext context)
     {
-        if (Feral.Bindings.Shift.IsPressed()
-            && Feral.Bindings.Alt.IsPressed())
+        if (FeralCompany.Bindings.Shift.IsPressed()
+            && FeralCompany.Bindings.Alt.IsPressed())
         {
             var value = context.ReadValue<float>();
-            var current = Feral.Settings.Map.Scale.Value;
+            var current = FeralCompany.Settings.Map.Scale.Value;
             var multiplier = current / 100;
             var newValue = Mathf.Clamp(current - value * multiplier, 1, 5);
-            Feral.Settings.Map.Scale.Value = newValue;
+            FeralCompany.Settings.Map.Scale.Value = newValue;
             return;
         }
 
-        if (Feral.Bindings.Alt.IsPressed())
+        if (FeralCompany.Bindings.Alt.IsPressed())
         {
             var value = context.ReadValue<float>();
-            var current = Feral.Settings.Map.Zoom.Value;
+            var current = FeralCompany.Settings.Map.Zoom.Value;
             var multiplier = current / 100 * 8;
             var newValue = Mathf.Clamp(current - value * multiplier, 1, 100);
-            Feral.Settings.Map.Zoom.Value = newValue;
+            FeralCompany.Settings.Map.Zoom.Value = newValue;
         }
     }
 
@@ -107,10 +107,10 @@ public sealed class FeralMap : MonoBehaviour
     private void Update()
     {
         ValidateTarget();
-        foreach (var pointer in Feral.CurrentRound.Pointers)
+        foreach (var pointer in FeralCompany.CurrentRound.Pointers)
             pointer.UpdateFor(Target);
 
-        _light.intensity = Target.IsInFacility ? Feral.Settings.Map.InternalLight : Feral.Settings.Map.ExternalLight;
+        _light.intensity = Target.IsInFacility ? FeralCompany.Settings.Map.InternalLight : FeralCompany.Settings.Map.ExternalLight;
 
         _light.transform.position = Target.Position + Vector3.up * 30f;
         _light.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
@@ -135,8 +135,8 @@ public sealed class FeralMap : MonoBehaviour
     {
         RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
         RenderPipelineManager.endCameraRendering -= EndCameraRendering;
-        Feral.Settings.Map.CullingMask.ChangeEvent -= UpdateCullingMask;
-        Feral.Settings.Map.Zoom.ChangeEvent -= UpdateZoom;
+        FeralCompany.Settings.Map.CullingMask.ChangeEvent -= UpdateCullingMask;
+        FeralCompany.Settings.Map.Zoom.ChangeEvent -= UpdateZoom;
         IngamePlayerSettings.Instance.playerInput.actions.FindAction("SwitchItem").performed -= OnMouseScroll;
     }
 

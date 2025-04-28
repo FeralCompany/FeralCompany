@@ -7,5 +7,5 @@ public static class StartOfRoundPatch
 {
     [HarmonyPostfix]
     [HarmonyPatch("EndOfGame")]
-    private static void PostFix_EndOfGame() => Feral.Events.InvokeExitMoon();
+    private static void PostFix_EndOfGame() => FeralCompany.Events.InvokeExitMoon();
 }

@@ -11,12 +11,14 @@ public class FeralEvents
     internal event Action? OnEnterMoon;
     internal event Action? OnExitMoon;
 
-    internal event Action? OnExitGame;
+    internal event Action? OnModStart;
+    internal event Action? OnModShutdown;
 
     internal event Action<RadarBoosterItem>? OnAddRadarBooster;
     internal event Action<RadarBoosterItem>? OnRemoveRadarBooster;
 
     internal event Action<MapPointer[]> OnPointersCreated = null!;
+    internal event Action<MapPointer[]> OnPointersDestroyed = null!;
 
     internal int PlayerCount { get; private set; }
     internal bool IsInGame { get; private set; }
@@ -46,14 +48,21 @@ public class FeralEvents
         OnExitMoon?.Invoke();
     }
 
-    internal void InvokeExitGame()
+    internal void InvokeStartMod()
+    {
+        IsInGame = true;
+        OnModStart?.Invoke();
+    }
+
+    internal void InvokeShutdownMod()
     {
         IsInGame = false;
-        OnExitGame?.Invoke();
+        OnModShutdown?.Invoke();
     }
 
     internal void InvokeAddRadarBooster(RadarBoosterItem radar) => OnAddRadarBooster?.Invoke(radar);
     internal void InvokeRemoveRadarBooster(RadarBoosterItem radar) => OnRemoveRadarBooster?.Invoke(radar);
 
     internal void InvokePointersCreated(MapPointer[] pointers) => OnPointersCreated?.Invoke(pointers);
+    internal void InvokePointersDestroyed(MapPointer[] pointers) => OnPointersDestroyed?.Invoke(pointers);
 }

@@ -7,7 +7,7 @@ public sealed class ShipPointer(GameObject pointerObject, PointerController cont
 {
     protected internal override Sprite GetIcon()
     {
-        return Feral.Assets.SpriteHome;
+        return FeralCompany.Assets.SpriteHome;
     }
 
     protected override bool VisibleFor(MapTarget target)
@@ -15,8 +15,8 @@ public sealed class ShipPointer(GameObject pointerObject, PointerController cont
         if (target is { IsOutsideFacility: true, IsOutside: true })
         {
             return target is RadarTarget
-                ? Feral.Settings.Map.PointerShipRadar
-                : Feral.Settings.Map.PointerShip;
+                ? FeralCompany.Settings.Map.PointerShipRadar
+                : FeralCompany.Settings.Map.PointerShip;
         }
         return false;
     }

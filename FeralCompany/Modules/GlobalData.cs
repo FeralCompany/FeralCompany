@@ -27,14 +27,14 @@ public sealed class GlobalData : MonoBehaviour
             _mapTargets.Add(target);
         }
 
-        Feral.Events.OnAddRadarBooster += AddRadarBooster;
-        Feral.Events.OnRemoveRadarBooster += RemoveRadarBooster;
+        FeralCompany.Events.OnAddRadarBooster += AddRadarBooster;
+        FeralCompany.Events.OnRemoveRadarBooster += RemoveRadarBooster;
     }
 
     private void OnDestroy()
     {
-        Feral.Events.OnAddRadarBooster -= AddRadarBooster;
-        Feral.Events.OnRemoveRadarBooster -= RemoveRadarBooster;
+        FeralCompany.Events.OnAddRadarBooster -= AddRadarBooster;
+        FeralCompany.Events.OnRemoveRadarBooster -= RemoveRadarBooster;
     }
 
     private void AddRadarBooster(RadarBoosterItem item)

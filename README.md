@@ -48,3 +48,7 @@ Note, most keybindings can be configured with [InputUtils](https://thunderstore.
 
 No specific support is provided for [LethalConfig](https://thunderstore.io/c/lethal-company/p/AinaVT/LethalConfig/),
 however all configurations are updated in real-time when changed via LethalConfig. No restarting necessary.
+
+## Contribution
+
+If you are interested in contributing to this project, please view the [Contribution Guidelines](https://github.com/FeralCompany/FeralCompany/blob/main/CONTRIBUTING.md).

@@ -7,7 +7,7 @@ public sealed class FireExitPointer(GameObject pointerObject, PointerController 
 {
     protected internal override Sprite GetIcon()
     {
-        return Feral.Assets.SpriteExtinguisher;
+        return FeralCompany.Assets.SpriteExtinguisher;
     }
 
     protected override bool VisibleFor(MapTarget target)
@@ -15,11 +15,11 @@ public sealed class FireExitPointer(GameObject pointerObject, PointerController 
         return IsEntrance switch
         {
             true when target is { IsOutsideFacility: true, IsOutsideShip: true } => target is RadarTarget
-                ? Feral.Settings.Map.PointerExternalFireRadar
-                : Feral.Settings.Map.PointerExternalFire,
+                ? FeralCompany.Settings.Map.PointerExternalFireRadar
+                : FeralCompany.Settings.Map.PointerExternalFire,
             false when target.IsInFacility => target is RadarTarget
-                ? Feral.Settings.Map.PointerInternalFireRadar
-                : Feral.Settings.Map.PointerInternalFire,
+                ? FeralCompany.Settings.Map.PointerInternalFireRadar
+                : FeralCompany.Settings.Map.PointerInternalFire,
             _ => false
         };
     }
