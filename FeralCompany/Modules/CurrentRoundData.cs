@@ -21,7 +21,7 @@ public sealed class CurrentRoundData : MonoBehaviour
 
     private void OnEnterMoon()
     {
-        var obj = GameObject.Find("CatwalkShip") ?? throw new NullReferenceException("CatwalkShip not available??");
+        var obj = GameObject.Find("Environment/HangarShip/StartGameLever") ?? throw new NullReferenceException("CatwalkShip not available??");
         CreatePointer(-1, obj.transform.position, false);
     }
 
