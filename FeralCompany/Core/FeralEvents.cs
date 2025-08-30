@@ -49,6 +49,7 @@ public class FeralEvents
     internal void InvokeExitGame()
     {
         IsInGame = false;
+        OnExitMoon?.Invoke();
         OnExitGame?.Invoke();
     }
 
